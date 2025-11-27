@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS valoraciones;
+DROP TABLE IF EXISTS detalle_pedido;
+DROP TABLE IF EXISTS pedidos;
+DROP TABLE IF EXISTS productos;
+DROP TABLE IF EXISTS categorias;
+DROP TABLE IF EXISTS usuarios;
