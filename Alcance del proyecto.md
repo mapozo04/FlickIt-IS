@@ -61,3 +61,4 @@ El proyecto se considerará completo y aceptado cuando se cumplan todos los sigu
 * **Criterio 5: Estabilidad del Sistema:** La aplicación no presenta errores graves (crashes) y mantiene un rendimiento aceptable en dispositivos de prueba clave (como fecha de finalización de pruebas).  
 * **Criterio 6: Aprobación del Administrador de Productos:** El panel de gestión permite a la persona la carga, edición y visualización de al menos 100 productos de prueba.
 
+Pablo Díaz Ruipérez, Arturo González Carbajo y José Massot Gregorio
