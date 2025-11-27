@@ -1,8 +1,8 @@
-# Alcance del Proyecto: Aplicación de Compras con Función de Deslizamiento
+# 4. Alcance del Proyecto: Aplicación de Compras con Función de Deslizamiento
 
 Este documento define el alcance para el desarrollo de una aplicación móvil con una funcionalidad de "deslizamiento" similar a Tinder, pero enfocada en productos de compra.
 
-# Funcionalidades que se incluirán
+# 4.1 Funcionalidades que se incluirán
 
 Las siguientes funcionalidades serán desarrolladas e incluidas en la aplicación:
 
@@ -23,11 +23,11 @@ Las siguientes funcionalidades serán desarrolladas e incluidas en la aplicació
 
 # 
 
-# Límites del Sistema (qué no se desarrollará)
+# 4.2 Límites del Sistema (qué no se desarrollará)
 
 Las siguientes funcionalidades y aspectos NO forman parte del alcance de este proyecto y NO serán desarrolladas:
 
-* **Sistema de Recomendación Avanzado (Machine Learning):** Inicialmente, los productos se mostrarán por orden de subida o popularidad simple. No se desarrollarán algoritmos complejos de aprendizaje automático para la personalización de las recomendaciones.  
+* ** Sistema de Recomendación Avanzado (Machine Learning):** Inicialmente, los productos se mostrarán por orden de subida o popularidad simple. No se desarrollarán algoritmos complejos de aprendizaje automático para la personalización de las recomendaciones.  
 * **Integración Social Completa:** No se incluirán funcionalidades como compartir productos en redes sociales ni chats entre usuarios.  
 * **Funcionalidad de Vendedor/Marketplace (P2P):** El sistema se centrará en la venta de productos por parte de la plataforma o de vendedores preaprobados. No se incluirán herramientas para que cualquier usuario pueda subir sus propios productos para venderlos (Punto a Punto).  
 * **Sistemas de Fidelización (Puntos, Cupones):** No se incluirán programas de lealtad, gestión de cupones complejos, o sistemas de puntos de recompensa en esta fase inicial.  
@@ -35,7 +35,7 @@ Las siguientes funcionalidades y aspectos NO forman parte del alcance de este pr
 
 # 
 
-# Entregables Principales
+# 4.3 Entregables Principales
 
 Los siguientes son los principales productos que se entregarán al finalizar el proyecto:
 
@@ -50,7 +50,7 @@ Los siguientes son los principales productos que se entregarán al finalizar el 
 
 # 
 
-# Criterios de Aceptación
+# 4.4 Criterios de Aceptación
 
 El proyecto se considerará completo y aceptado cuando se cumplan todos los siguientes criterios:
 
