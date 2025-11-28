@@ -1,0 +1,2060 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>FlickIt - Portal de Vendedores</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #020617;
+            --bg-elevated: #020617;
+            --bg-card: #020617;
+            --bg-sidebar: #020617;
+            --accent: #38bdf8;
+            --accent-soft: rgba(56, 189, 248, 0.1);
+            --accent-strong: rgba(56, 189, 248, 0.25);
+            --accent-alt: #a855f7;
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+            --border-subtle: #1e293b;
+            --danger: #f97373;
+            --radius-lg: 14px;
+            --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.75);
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top left, #1d283a 0, var(--bg) 45%, var(--bg) 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        body.light-mode {
+            --bg: #f3f4f6;
+            --bg-elevated: #ffffff;
+            --bg-card: #ffffff;
+            --bg-sidebar: #f9fafb;
+            --accent: #2563eb;
+            --accent-soft: rgba(37, 99, 235, 0.08);
+            --accent-strong: rgba(37, 99, 235, 0.18);
+            --accent-alt: #7c3aed;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --border-subtle: #e5e7eb;
+            --danger: #dc2626;
+            background: radial-gradient(circle at top left, #bfdbfe 0, var(--bg) 45%, var(--bg) 100%);
+        }
+
+        /* Layout principal */
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.9rem 1.8rem;
+            backdrop-filter: blur(16px);
+            background: linear-gradient(to right,
+                rgba(15, 23, 42, 0.9),
+                rgba(15, 23, 42, 0.85));
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        body.light-mode .topbar {
+            background: linear-gradient(to right,
+                rgba(249, 250, 251, 0.94),
+                rgba(243, 244, 246, 0.94));
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 999px;              /* hace el contenedor redondo */
+            overflow: hidden;                  /* 👉 recorta la imagen dentro del círculo */
+            background: radial-gradient(circle at 30% 0, #f97316 0, #e11d48 38%, #4f46e5 90%);
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 0.03em;
+        }
+
+/* Esto está bien, solo le añadimos el border-radius si quieres */
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: inherit;    /* opcional, copia el redondeo del padre */
+        }
+
+        .brand h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .brand p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .account-status,
+        .plan-status {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.15rem;
+            font-size: 0.78rem;
+        }
+
+        .account-status span:first-child,
+        .plan-status span:first-child {
+            color: var(--text-muted);
+        }
+
+        .status-pill {
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: rgba(248, 113, 113, 0.1);
+            color: #fecaca;
+            border: 1px solid rgba(248, 113, 113, 0.4);
+        }
+
+        .status-approved {
+            background: rgba(34, 197, 94, 0.1);
+            color: #166534;
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+
+        body.light-mode .status-pending {
+            background: rgba(248, 113, 113, 0.12);
+            color: #991b1b;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 250px minmax(0, 1fr);
+            gap: 1.2rem;
+            padding: 1.2rem 1.8rem 1.8rem;
+        }
+
+        @media (max-width: 860px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar */
+
+        .sidebar {
+            background: radial-gradient(circle at top, var(--bg-elevated), var(--bg));
+            border-radius: 1.1rem;
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-soft);
+            padding: 1rem 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top center, rgba(56, 189, 248, 0.15), transparent 55%);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        body.light-mode .sidebar::before {
+            opacity: 0.15;
+        }
+
+        .sidebar-header {
+            padding: 0 0.4rem;
+        }
+
+        .sidebar-header h2 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-muted);
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .menu-item {
+            border: none;
+            width: 100%;
+            text-align: left;
+            background: transparent;
+            color: var(--text-muted);
+            padding: 0.55rem 0.7rem;
+            border-radius: 0.7rem;
+            font-size: 0.86rem;
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease, transform 0.08s ease;
+        }
+
+        .menu-item::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.5);
+        }
+
+        .menu-item:hover {
+            background: rgba(15, 23, 42, 0.85);
+            color: var(--text-main);
+            transform: translateY(-1px);
+        }
+
+        body.light-mode .menu-item:hover {
+            background: rgba(229, 231, 235, 0.9);
+        }
+
+        .menu-item.active {
+            background: linear-gradient(to right, var(--accent-soft), var(--accent-strong));
+            color: white;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.4);
+        }
+
+        .menu-item.active::before {
+            background: var(--accent);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 0.4rem 0.4rem 0.1rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Content */
+
+        .content {
+            min-height: calc(100vh - 80px);
+            position: relative;
+        }
+
+        .view {
+            display: none;
+            animation: fadeIn 0.18s ease-out;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .page-title span {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 0.9rem;
+            margin-top: 0.4rem;
+        }
+
+        .card {
+            background: linear-gradient(145deg, var(--bg-card), var(--bg-elevated));
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-soft);
+            padding: 0.85rem 0.9rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: -30%;
+            background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.15), transparent 55%);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.4rem;
+            margin-bottom: 0.35rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-title {
+            font-size: 0.88rem;
+            font-weight: 500;
+        }
+
+        .card-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            color: var(--text-muted);
+        }
+
+        .badge-accent {
+            border-color: rgba(56, 189, 248, 0.7);
+            background: var(--accent-soft);
+            color: #e0f2fe;
+        }
+
+        .stat-number {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-top: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .stat-trend {
+            margin-top: 0.3rem;
+            font-size: 0.75rem;
+            color: #bbf7d0;
+        }
+
+        .stat-trend.negative {
+            color: #fecaca;
+        }
+
+        .hint {
+            margin-top: 0.8rem;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* Botones & inputs */
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            padding: 0.42rem 0.8rem;
+            border-radius: 999px;
+            border: none;
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease, color 0.15s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #38bdf8, #a855f7);
+            color: #0f172a;
+            font-weight: 500;
+            box-shadow: 0 10px 25px rgba(56, 189, 248, 0.5);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 14px 35px rgba(56, 189, 248, 0.65);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            background: transparent;
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background: rgba(15, 23, 42, 0.9);
+            color: #e5e7eb;
+            transform: translateY(-1px);
+        }
+
+        body.light-mode .btn-outline:hover {
+            background: rgba(229, 231, 235, 0.9);
+            color: #111827;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-muted);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(15, 23, 42, 0.8);
+            color: var(--text-main);
+        }
+
+        .btn-small {
+            font-size: 0.76rem;
+            padding: 0.32rem 0.7rem;
+        }
+
+        .field-group {
+            margin-bottom: 0.6rem;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 0.78rem;
+            margin-bottom: 0.2rem;
+            color: var(--text-muted);
+        }
+
+        .field-input,
+        .field-select,
+        .field-textarea {
+            width: 100%;
+            padding: 0.42rem 0.55rem;
+            border-radius: 0.6rem;
+            border: 1px solid var(--border-subtle);
+            background: rgba(15, 23, 42, 0.95);
+            color: var(--text-main);
+            font-size: 0.8rem;
+            outline: none;
+            transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+        }
+
+        body.light-mode .field-input,
+        body.light-mode .field-select,
+        body.light-mode .field-textarea {
+            background: #f9fafb;
+        }
+
+        .field-input:focus,
+        .field-select:focus,
+        .field-textarea:focus {
+            border-color: rgba(56, 189, 248, 0.7);
+            box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3);
+            background: rgba(15, 23, 42, 0.98);
+        }
+
+        body.light-mode .field-input:focus,
+        body.light-mode .field-select:focus,
+        body.light-mode .field-textarea:focus {
+            background: #ffffff;
+        }
+
+        .field-textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        /* Switch */
+
+        .switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .switch input {
+            display: none;
+        }
+
+        .slider {
+            width: 36px;
+            height: 20px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            position: relative;
+            transition: background 0.15s ease, border 0.15s ease;
+        }
+
+        body.light-mode .slider {
+            background: #e5e7eb;
+        }
+
+        .slider::before {
+            content: "";
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            width: 16px;
+            height: 16px;
+            border-radius: 999px;
+            background: #e5e7eb;
+            transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1), background 0.15s ease;
+        }
+
+        body.light-mode .slider::before {
+            background: #ffffff;
+        }
+
+        .switch input:checked + .slider {
+            background: var(--accent);
+            border-color: transparent;
+        }
+
+        .switch input:checked + .slider::before {
+            transform: translateX(15px);
+            background: #0f172a;
+        }
+
+        /* Panel principal */
+
+        .panel-header-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .panel-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        /* Productos */
+
+        .product-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+            gap: 0.9rem;
+            margin-top: 0.4rem;
+        }
+
+        @media (max-width: 1024px) {
+            .product-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .product-lock-wrapper {
+            position: relative;
+        }
+
+        .product-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.98));
+            border-radius: inherit;
+            border: 1px dashed rgba(148, 163, 184, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem;
+            text-align: center;
+            gap: 0.4rem;
+            z-index: 2;
+        }
+
+        .product-overlay p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .product-overlay span {
+            font-size: 0.78rem;
+            color: #fecaca;
+        }
+
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 320px;
+            overflow: auto;
+            padding-right: 0.1rem;
+        }
+
+        .product-card {
+            display: grid;
+            grid-template-columns: 70px minmax(0, 1fr);
+            gap: 0.6rem;
+            align-items: center;
+        }
+
+        .product-thumb {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 0.7rem;
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            background: radial-gradient(circle at top, rgba(56, 189, 248, 0.3), var(--bg));
+        }
+
+        .product-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .product-title {
+            font-size: 0.86rem;
+            font-weight: 500;
+        }
+
+        .product-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .product-price {
+            font-size: 0.82rem;
+            font-weight: 500;
+            margin-top: 0.1rem;
+        }
+
+        /* Charts & tablas */
+
+        .chart {
+            margin-top: 0.4rem;
+            height: 170px;
+            display: flex;
+            align-items: flex-end;
+            gap: 0.4rem;
+        }
+
+        .chart-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.35rem;
+            min-width: 0;
+        }
+
+        .chart-bar-inner {
+            width: 100%;
+            border-radius: 999px;
+            background: linear-gradient(to top, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.4));
+            box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.4);
+        }
+
+        .chart-bar-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .chart-legend {
+            margin-top: 0.4rem;
+            font-size: 0.76rem;
+            color: var(--text-muted);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.35rem;
+            font-size: 0.78rem;
+        }
+
+        th,
+        td {
+            padding: 0.35rem 0.4rem;
+            text-align: left;
+        }
+
+        th {
+            font-weight: 500;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        tbody tr:nth-child(odd) {
+            background: rgba(15, 23, 42, 0.75);
+        }
+
+        tbody tr:nth-child(even) {
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        body.light-mode tbody tr:nth-child(odd) {
+            background: #f9fafb;
+        }
+
+        body.light-mode tbody tr:nth-child(even) {
+            background: #ffffff;
+        }
+
+        td:last-child {
+            text-align: right;
+        }
+
+        .table-footer {
+            margin-top: 0.45rem;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        /* Promoción */
+
+        .promo-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+            gap: 0.9rem;
+            margin-top: 0.4rem;
+        }
+
+        @media (max-width: 960px) {
+            .promo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .price-tag {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0.2rem 0 0.4rem;
+        }
+
+        .price-tag span {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .list {
+            list-style: none;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .list li {
+            display: flex;
+            gap: 0.4rem;
+            align-items: flex-start;
+            margin-bottom: 0.25rem;
+        }
+
+        .list li::before {
+            content: "•";
+            color: var(--accent);
+            margin-top: 0.1rem;
+        }
+
+        .tagline {
+            font-size: 0.78rem;
+            color: var(--accent-alt);
+            margin-top: 0.3rem;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            border: 1px solid rgba(56, 189, 248, 0.55);
+            background: var(--accent-soft);
+            color: #e0f2fe;
+        }
+
+        .pill-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: var(--accent);
+        }
+
+        .promo-status {
+            margin-top: 0.45rem;
+            font-size: 0.78rem;
+        }
+
+        .promo-status span {
+            font-weight: 500;
+        }
+
+        .promo-status-active span {
+            color: #22c55e;
+        }
+
+        .promo-status-inactive span {
+            color: #dc2626;
+        }
+
+        .plan-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            font-size: 0.78rem;
+        }
+
+        .plan-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.35rem;
+        }
+
+        .plan-option input {
+            margin-top: 0.15rem;
+        }
+
+        .plan-option-title {
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .plan-option-desc {
+            display: block;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        /* User menu */
+
+        .user-menu-wrapper {
+            position: relative;
+        }
+
+        .user-menu-trigger {
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            background: transparent;
+            color: var(--text-main);
+            font-size: 0.8rem;
+            padding: 0.32rem 0.75rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .user-menu-trigger span.avatar {
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            background: radial-gradient(circle, #38bdf8, #0f172a);
+        }
+
+        .user-menu {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 0.35rem);
+            min-width: 190px;
+            background: var(--bg-elevated);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-soft);
+            padding: 0.35rem 0;
+            display: none;
+            z-index: 30;
+        }
+
+        .user-menu.open {
+            display: block;
+        }
+
+        .user-menu-item {
+            width: 100%;
+            text-align: left;
+            padding: 0.45rem 0.9rem;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 0.78rem;
+            cursor: pointer;
+        }
+
+        .user-menu-item:hover {
+            background: rgba(15, 23, 42, 0.9);
+            color: #e5e7eb;
+        }
+
+        body.light-mode .user-menu-item:hover {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        /* Modal manual */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-dialog {
+            position: relative;
+            max-width: 720px;
+            max-height: 80vh;
+            width: 100%;
+            margin: 0 1rem;
+            background: var(--bg-elevated);
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.1rem;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-subtle);
+            overflow: auto;
+            z-index: 51;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-header h2 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            font-size: 0.8rem;
+            color: var(--text-main);
+        }
+
+        .modal-body h3 {
+            font-size: 0.9rem;
+            margin: 0.6rem 0 0.2rem;
+        }
+
+        .modal-body p,
+        .modal-body ul {
+            margin-bottom: 0.3rem;
+        }
+
+        .modal-body ul {
+            padding-left: 1rem;
+            list-style: disc;
+        }
+
+        .modal-body strong {
+            color: var(--accent-alt);
+        }
+
+        /* Misc responsive */
+
+        @media (max-width: 720px) {
+            .topbar {
+                padding-inline: 1rem;
+            }
+
+            .layout {
+                padding-inline: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">
+        <div class="logo">
+            <img src="logo.jpg" alt="Logo FlickIt">
+        </div>
+        <div>
+            <h1>FlickIt Sellers</h1>
+            <p>Portal para vendedores · Productos con experiencia tipo Tinder/TikTok</p>
+        </div>
+    </div>
+
+
+    <div class="topbar-right">
+        <div class="account-status">
+            <span>Estado de la cuenta</span>
+            <span id="statusLabel" class="status-pill status-pending">Pendiente</span>
+        </div>
+
+        <div class="plan-status">
+            <span>Plan de membresía</span>
+            <button id="planButton" class="btn btn-outline btn-small" data-view="promocion">
+                Plan Premium
+            </button>
+        </div>
+
+        <label class="switch">
+            <span>Simular cuenta aprobada</span>
+            <input type="checkbox" id="accountToggle" />
+            <span class="slider"></span>
+        </label>
+
+        <button id="manualButton" class="btn btn-outline btn-small">
+            Manual de usuario
+        </button>
+
+        <div class="user-menu-wrapper">
+            <button id="userMenuButton" class="user-menu-trigger">
+                <span class="avatar"></span>
+                <span>Vendedor</span>
+                <span>▾</span>
+            </button>
+            <div id="userMenu" class="user-menu">
+                <button class="user-menu-item" data-action="toggle-theme">
+                    Cambiar tema (oscuro / claro)
+                </button>
+                <button class="user-menu-item" data-action="user-settings">
+                    Ajustes de usuario
+                </button>
+                <button class="user-menu-item" data-action="total-income">
+                    Ingresos totales
+                </button>
+                <button class="user-menu-item" data-action="logout">
+                    Cerrar sesión
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Menú</h2>
+        </div>
+        <nav class="menu">
+            <button class="menu-item active" data-view="panel">
+                Panel general
+            </button>
+            <button class="menu-item" data-view="productos">
+                Productos
+            </button>
+            <button class="menu-item" data-view="estadisticas">
+                Estadísticas
+            </button>
+            <button class="menu-item" data-view="ingresos">
+                Ingresos
+            </button>
+            <button class="menu-item" data-view="promocion">
+                Promoción mensual
+            </button>
+        </nav>
+        <div class="sidebar-footer">
+            Conecta tu catálogo aquí y FlickIt se encargará del resto.
+        </div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main class="content">
+        <!-- Panel general -->
+        <section id="panel" class="view active">
+            <div class="panel-header-row">
+                <div>
+                    <div class="page-title">
+                        Resumen
+                        <span>Vista rápida del rendimiento de tus productos</span>
+                    </div>
+                </div>
+                <div class="panel-actions">
+                    <button class="btn btn-ghost btn-small" data-view="productos">
+                        + Nuevo producto
+                    </button>
+                    <button class="btn btn-primary btn-small" data-view="promocion">
+                        Activar promoción mensual
+                    </button>
+                </div>
+            </div>
+
+            <div class="cards-grid">
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Interacciones hoy</div>
+                            <div class="card-subtitle">Deslizamientos y visualizaciones en FlickIt</div>
+                        </div>
+                        <span class="badge badge-accent">Tiempo real (demo)</span>
+                    </div>
+                    <div class="stat-number" id="interaccionesHoy">0</div>
+                    <div class="stat-label">Media diaria basada en los últimos 7 días</div>
+                    <div class="stat-trend" id="interaccionesTrend">+0% vs ayer</div>
+                </article>
+
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Ventas de hoy</div>
+                            <div class="card-subtitle">Pedidos confirmados</div>
+                        </div>
+                        <span class="badge">Conversiones</span>
+                    </div>
+                    <div class="stat-number" id="ventasHoy">0</div>
+                    <div class="stat-label">Ratio de conversión</div>
+                    <div class="stat-trend" id="conversionHoy">0% de las interacciones</div>
+                </article>
+
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Ingresos de hoy</div>
+                            <div class="card-subtitle">Importe estimado</div>
+                        </div>
+                        <span class="badge">EUR</span>
+                    </div>
+                    <div class="stat-number" id="ingresosHoy">0 €</div>
+                    <div class="stat-label">Sin incluir impuestos ni comisiones</div>
+                </article>
+
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Puntuación de relevancia</div>
+                            <div class="card-subtitle">Cómo te ve el algoritmo de recomendación</div>
+                        </div>
+                        <span class="badge">FlickIt Score</span>
+                    </div>
+                    <div class="stat-number" id="scoreHoy">0</div>
+                    <div class="stat-label">0 - 100 (más alto, más visibilidad)</div>
+                    <div class="stat-trend" id="scoreTrend">Mejorando gracias a la interacción reciente</div>
+                </article>
+            </div>
+
+            <p class="hint">
+                Las cifras mostradas son de ejemplo. En producción, este panel se conectaría a la API de FlickIt
+                para mostrar tus estadísticas reales de interacciones, ventas y visibilidad en tiempo real.
+            </p>
+        </section>
+
+        <!-- Productos -->
+        <section id="productos" class="view">
+            <div class="page-title">
+                Gestión de productos
+                <span>Configura lo que se mostrará en la app FlickIt</span>
+            </div>
+
+            <div class="product-layout">
+                <!-- Formulario -->
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Nuevo producto</div>
+                            <div class="card-subtitle">
+                                Solo disponible si tu cuenta está aprobada.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-lock-wrapper">
+                        <form id="productForm">
+                            <div class="field-group">
+                                <label class="field-label" for="prodName">Nombre del producto</label>
+                                <input class="field-input" type="text" id="prodName" name="name"
+                                       placeholder="Ej: Sudadera FlickIt edición limitada" required />
+                            </div>
+
+                            <div class="field-group">
+                                <label class="field-label" for="prodCategory">Categoría</label>
+                                <select class="field-select" id="prodCategory" name="category">
+                                    <option value="Moda">Moda</option>
+                                    <option value="Tecnología">Tecnología</option>
+                                    <option value="Hogar">Hogar</option>
+                                    <option value="Belleza">Belleza</option>
+                                    <option value="Otros">Otros</option>
+                                </select>
+                            </div>
+
+                            <div class="field-group">
+                                <label class="field-label" for="prodPrice">Precio (€)</label>
+                                <input class="field-input" type="number" step="0.01" min="0"
+                                       id="prodPrice" name="price" placeholder="39.99" required />
+                            </div>
+
+                            <div class="field-group">
+                                <label class="field-label" for="prodImage">URL de imagen (opcional)</label>
+                                <input class="field-input" type="url" id="prodImage" name="image"
+                                       placeholder="https://..." />
+                            </div>
+
+                            <div class="field-group">
+                                <label class="field-label" for="prodDesc">Descripción breve</label>
+                                <textarea class="field-textarea" id="prodDesc" name="description"
+                                          placeholder="Descripción que verán los usuarios al deslizar tu producto en FlickIt."></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-small">
+                                Guardar producto
+                            </button>
+                        </form>
+
+                        <!-- Bloqueo cuando la cuenta no está aprobada -->
+                        <div class="product-overlay" id="productBlocker">
+                            <p>Tu cuenta todavía no está aprobada para vender.</p>
+                            <p>
+                                Una vez aprobada, podrás añadir productos y se mostrarán en la app
+                                <strong>FlickIt</strong> con una interfaz inspirada en Tinder y TikTok.
+                            </p>
+                            <span>
+                                Activa el interruptor <strong>"Simular cuenta aprobada"</strong> en la parte superior
+                                para probar el flujo de productos.
+                            </span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Lista de productos -->
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Productos activos</div>
+                            <div class="card-subtitle">
+                                Vista previa de lo que verá el usuario en FlickIt.
+                            </div>
+                        </div>
+                        <span class="badge">Catálogo local (demo)</span>
+                    </div>
+                    <div id="productsList" class="product-list">
+                        <p class="hint">
+                            Todavía no has añadido ningún producto. Cuando guardes uno desde el formulario, aparecerá aquí.
+                        </p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Estadísticas -->
+        <section id="estadisticas" class="view">
+            <div class="page-title">
+                Estadísticas detalladas
+                <span>Interacciones y comportamiento de los usuarios</span>
+            </div>
+
+            <div class="cards-grid">
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Interacciones por día</div>
+                            <div class="card-subtitle">
+                                Deslizamientos, likes y visualizaciones en la app FlickIt.
+                            </div>
+                        </div>
+                    </div>
+                    <div id="chartInteracciones" class="chart"></div>
+                    <div class="chart-legend">
+                        Basado en los últimos 7 días (datos de ejemplo). Puedes conectar esto al backend para cargar
+                        estadísticas reales.
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Resumen rápido</div>
+                            <div class="card-subtitle">Métricas clave del periodo reciente</div>
+                        </div>
+                    </div>
+
+                    <table>
+                        <tbody>
+                        <tr>
+                            <th>Total de interacciones</th>
+                            <td id="totalInteracciones">–</td>
+                        </tr>
+                        <tr>
+                            <th>Ventas totales</th>
+                            <td id="totalVentas">–</td>
+                        </tr>
+                        <tr>
+                            <th>Ratio de conversión</th>
+                            <td id="ratioConversion">–</td>
+                        </tr>
+                        <tr>
+                            <th>Tiempo medio de sesión</th>
+                            <td>3 min 42 s (demo)</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="hint">
+                        Aquí podrías mostrar métricas avanzadas: retención, embudo de conversión, productos más
+                        deslizados, etc. La app FlickIt usaría estos datos para ajustar sus algoritmos de recomendación.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <!-- Ingresos -->
+        <section id="ingresos" class="view">
+            <div class="page-title">
+                Ingresos
+                <span>Resumen mensual de ganancias</span>
+            </div>
+
+            <article class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Ingresos por mes</div>
+                        <div class="card-subtitle">
+                            Monto estimado según ventas realizadas a través de la app FlickIt.
+                        </div>
+                    </div>
+                    <span class="badge">Demo</span>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Mes</th>
+                        <th>Ventas brutas</th>
+                        <th>Ingresos netos</th>
+                    </tr>
+                    </thead>
+                    <tbody id="ingresosTablaBody"></tbody>
+                </table>
+
+                <div class="table-footer">
+                    Ingresos netos totales (demo):
+                    <strong id="ingresosTotales">0 €</strong>.
+                    <br />
+                    No se incluyen comisiones, impuestos ni posibles costes de promoción.
+                </div>
+            </article>
+        </section>
+
+        <!-- Promoción mensual -->
+        <section id="promocion" class="view">
+            <div class="page-title">
+                Servicio mensual de promoción
+                <span>Aumenta la visibilidad de tus productos en FlickIt</span>
+            </div>
+
+            <div class="promo-grid">
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">FlickIt Boost</div>
+                            <div class="card-subtitle">Servicio de promoción mensual</div>
+                        </div>
+                        <span class="badge-accent badge">Recomendado</span>
+                    </div>
+
+                    <div class="price-tag">
+                        29,99 € <span>/ mes (desde)</span>
+                    </div>
+
+                    <div class="field-group">
+                        <label class="field-label">Selecciona tu plan de membresía</label>
+                        <div class="plan-options">
+                            <label class="plan-option">
+                                <input type="radio" name="membershipPlan" value="Básico" checked />
+                                <div>
+                                    <span class="plan-option-title">Básico (29,99 €/mes)</span>
+                                    <small class="plan-option-desc">
+                                        Ideal para empezar. Impulso moderado de visibilidad.
+                                    </small>
+                                </div>
+                            </label>
+                            <label class="plan-option">
+                                <input type="radio" name="membershipPlan" value="Premium" />
+                                <div>
+                                    <span class="plan-option-title">Premium (79,99 €/mes)</span>
+                                    <small class="plan-option-desc">
+                                        Recomendado. Analíticas avanzadas e IA de recomendación.
+                                    </small>
+                                </div>
+                            </label>
+                            <label class="plan-option">
+                                <input type="radio" name="membershipPlan" value="Elite" />
+                                <div>
+                                    <span class="plan-option-title">Elite (149,99 €/mes)</span>
+                                    <small class="plan-option-desc">
+                                        Máxima visibilidad. Prioridad absoluta en el feed.
+                                    </small>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <ul class="list">
+                        <li>Aparición prioritaria en el feed de descubrimiento.</li>
+                        <li>Más impresiones en secciones tipo TikTok (vídeo y scroll infinito).</li>
+                        <li>Optimización automática en el algoritmo de recomendación.</li>
+                        <li>Informes extra de rendimiento y segmentación.</li>
+                    </ul>
+
+                    <p class="tagline">
+                        Ideal para lanzar nuevos productos o reforzar campañas puntuales.
+                    </p>
+
+                    <div style="margin-top: 0.6rem; display: flex; gap: 0.4rem; flex-wrap: wrap;">
+                        <button id="btnTogglePromo" class="btn btn-primary btn-small">
+                            Activar servicio mensual
+                        </button>
+                        <button class="btn btn-ghost btn-small">
+                            Ver condiciones completas
+                        </button>
+                    </div>
+
+                    <p id="promoStatusText" class="promo-status promo-status-inactive">
+                        Estado actual: <span>Inactivo</span>. Solo es una simulación de interfaz, no se realiza ningún cobro real.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Impacto estimado</div>
+                            <div class="card-subtitle">Proyección basada en tus métricas recientes</div>
+                        </div>
+                    </div>
+
+                    <p class="hint">
+                        Al activar el servicio, se espera:
+                    </p>
+                    <ul class="list" style="margin-top: 0.4rem;">
+                        <li>Entre un 20% y un 50% más de interacciones en productos promocionados.</li>
+                        <li>Mayor probabilidad de aparecer en las primeras posiciones del feed.</li>
+                        <li>Mayor capacidad de testear precios, creatividades y descripciones.</li>
+                    </ul>
+
+                    <div style="margin-top: 0.7rem;">
+                        <span class="pill">
+                            <span class="pill-dot"></span>
+                            Vista previa de datos. Conecta tu backend para usar valores reales.
+                        </span>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Modal Manual de Usuario -->
+<div id="manualModal" class="modal" aria-hidden="true">
+    <div id="manualBackdrop" class="modal-backdrop"></div>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="manualTitle">
+        <div class="modal-header">
+            <h2 id="manualTitle">Manual de Usuario - Portal de Vendedores FlickIt</h2>
+            <button id="manualClose" class="modal-close" aria-label="Cerrar">×</button>
+        </div>
+        <div class="modal-body">
+            <h3>1. Introducción</h3>
+            <p>
+                Bienvenido al ecosistema <strong>FlickIt</strong>. Este portal de vendedores es tu centro
+                de control para gestionar tus productos y maximizar tus ventas dentro de la app principal,
+                basada en vídeos cortos y deslizamiento al estilo TikTok / Tinder.
+            </p>
+            <p>
+                Desde aquí podrás revisar el rendimiento, ver estadísticas clave y contratar servicios
+                de promoción para ganar visibilidad en el algoritmo de recomendaciones.
+            </p>
+
+            <h3>Requisitos previos</h3>
+            <ul>
+                <li>Disponer de una <strong>cuenta de vendedor aprobada</strong>.</li>
+                <li>Usar un navegador moderno (Chrome, Firefox, Safari, Edge).</li>
+                <li>Tener una conexión estable a Internet.</li>
+            </ul>
+
+            <h3>2. Interfaz principal (Dashboard)</h3>
+            <p>
+                Al iniciar sesión se muestra el <strong>Panel general</strong>. Aquí encuentras tarjetas
+                con la información más importante de tu actividad reciente:
+            </p>
+            <ul>
+                <li>
+                    <strong>Interacciones hoy</strong>: número de deslizamientos, visualizaciones y acciones
+                    que los usuarios han hecho sobre tus productos en la app.
+                </li>
+                <li>
+                    <strong>Ventas de hoy</strong>: pedidos confirmados en el día.
+                </li>
+                <li>
+                    <strong>Ingresos de hoy</strong>: importe estimado generado por las ventas del día
+                    (sin impuestos ni comisiones).
+                </li>
+                <li>
+                    <strong>Puntuación de relevancia</strong>: indicador entre 0 y 100 que resume cómo está
+                    valorando el algoritmo tus productos. Cuanto más alto, más visibilidad.
+                </li>
+            </ul>
+
+            <p>
+                Además, en la sección de <strong>Estadísticas</strong> encontrarás:
+            </p>
+            <ul>
+                <li>
+                    Una gráfica de <strong>interacciones por día (7 días)</strong>, donde puedes ver la
+                    tendencia de comportamiento de los usuarios.
+                </li>
+                <li>
+                    Un resumen de <strong>total de interacciones</strong>, <strong>ventas totales</strong>
+                    y <strong>ratio de conversión</strong>, útil para evaluar si tus campañas están funcionando.
+                </li>
+            </ul>
+
+            <h3>3. Servicios Premium y Promoción</h3>
+            <p>
+                FlickIt utiliza un algoritmo de recomendación para decidir qué productos se muestran a
+                cada usuario. Para impulsar tu presencia, puedes activar un <strong>plan de membresía</strong>
+                desde la sección <strong>Promoción mensual</strong> o haciendo clic en el botón de plan de la barra superior.
+            </p>
+            <p>Los planes disponibles son:</p>
+            <ul>
+                <li>
+                    <strong>Básico (29,99 €/mes)</strong>: perfecto para empezar. Ofrece un impulso moderado en visibilidad.
+                </li>
+                <li>
+                    <strong>Premium (79,99 €/mes)</strong>: recomendado si ya tienes cierta tracción. Incluye
+                    analíticas más avanzadas y mejor ajuste del algoritmo.
+                </li>
+                <li>
+                    <strong>Elite (149,99 €/mes)</strong>: nivel máximo de exposición, con prioridad absoluta
+                    en el feed de los usuarios.
+                </li>
+            </ul>
+            <p>
+                Al seleccionar un plan y activar el servicio mensual:
+            </p>
+            <ul>
+                <li>Tus productos aparecen más arriba en el feed de descubrimiento.</li>
+                <li>Consigues más impresiones en formatos tipo TikTok (vídeo + scroll infinito).</li>
+                <li>Obtienes datos adicionales para analizar rendimiento y segmentación.</li>
+            </ul>
+
+            <h3>4. Soporte y ayuda</h3>
+            <ul>
+                <li>
+                    Puedes volver a abrir este <strong>manual</strong> desde el botón
+                    <strong>"Manual de usuario"</strong> en la parte superior de la pantalla.
+                </li>
+                <li>
+                    Si tienes problemas con tu cuenta o con la configuración, contacta con tu
+                    equipo de soporte técnico (por ejemplo, soporte@flickit.app, según tu entorno real).
+                </li>
+            </ul>
+
+            <p>
+                FlickIt Sellers quiere ayudarte a transformar la forma en la que vendes: productos,
+                vídeo corto y deslizamiento en una sola experiencia.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Datos de ejemplo
+    const demoStats = {
+        todayInteractions: 1320,
+        todaySales: 27,
+        todayRevenue: 534.9,
+        conversionRate: 2.1,
+        relevanceScore: 88,
+        relevanceTrendText: "Tu contenido está funcionando bien esta semana.",
+        interactionsTrendText: "+12% vs ayer",
+        interactionsByDay: [
+            { label: "Lun", value: 850 },
+            { label: "Mar", value: 920 },
+            { label: "Mié", value: 1100 },
+            { label: "Jue", value: 990 },
+            { label: "Vie", value: 1250 },
+            { label: "Sáb", value: 1450 },
+            { label: "Dom", value: 1320 }
+        ],
+        totalSales: 180,
+        totalInteractions: 7880
+    };
+
+    const revenueData = [
+        { month: "Enero", gross: 1240.50, net: 980.20 },
+        { month: "Febrero", gross: 1380.90, net: 1095.70 },
+        { month: "Marzo", gross: 1543.10, net: 1227.90 },
+        { month: "Abril", gross: 1610.00, net: 1288.00 }
+    ];
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // Navegación
+        const menuItems = document.querySelectorAll(".menu-item");
+        const views = document.querySelectorAll(".view");
+
+        function goToView(id) {
+            menuItems.forEach((b) => {
+                b.classList.toggle("active", b.dataset.view === id);
+            });
+            views.forEach((view) => {
+                view.classList.toggle("active", view.id === id);
+            });
+        }
+
+        menuItems.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const target = btn.dataset.view;
+                goToView(target);
+            });
+        });
+
+        // Permitir que botones con data-view cambien de pestaña
+        document.body.addEventListener("click", (e) => {
+            const btn = e.target.closest("[data-view]");
+            if (!btn || btn.classList.contains("menu-item")) return;
+            const viewId = btn.getAttribute("data-view");
+            const menuBtn = document.querySelector(`.menu-item[data-view="${viewId}"]`);
+            if (menuBtn) menuBtn.click();
+        });
+
+        // Estado de cuenta aprobada / pendiente
+        const accountToggle = document.getElementById("accountToggle");
+        const statusLabel = document.getElementById("statusLabel");
+        const productBlocker = document.getElementById("productBlocker");
+
+        function updateAccountStatus() {
+            const approved = accountToggle.checked;
+            if (approved) {
+                statusLabel.textContent = "Aprobada";
+                statusLabel.classList.remove("status-pending");
+                statusLabel.classList.add("status-approved");
+                productBlocker.style.display = "none";
+            } else {
+                statusLabel.textContent = "Pendiente";
+                statusLabel.classList.remove("status-approved");
+                statusLabel.classList.add("status-pending");
+                productBlocker.style.display = "flex";
+            }
+        }
+
+        accountToggle.addEventListener("change", updateAccountStatus);
+        updateAccountStatus();
+
+        // Panel general
+        const interaccionesHoyEl = document.getElementById("interaccionesHoy");
+        const ventasHoyEl = document.getElementById("ventasHoy");
+        const ingresosHoyEl = document.getElementById("ingresosHoy");
+        const conversionHoyEl = document.getElementById("conversionHoy");
+        const interaccionesTrendEl = document.getElementById("interaccionesTrend");
+        const scoreHoyEl = document.getElementById("scoreHoy");
+        const scoreTrendEl = document.getElementById("scoreTrend");
+
+        interaccionesHoyEl.textContent = demoStats.todayInteractions.toLocaleString("es-ES");
+        ventasHoyEl.textContent = demoStats.todaySales.toLocaleString("es-ES");
+        ingresosHoyEl.textContent = demoStats.todayRevenue.toLocaleString("es-ES", {
+            style: "currency",
+            currency: "EUR"
+        });
+        conversionHoyEl.textContent =
+            demoStats.conversionRate.toLocaleString("es-ES", { maximumFractionDigits: 1 }) +
+            "% de las interacciones";
+        interaccionesTrendEl.textContent = demoStats.interactionsTrendText;
+        scoreHoyEl.textContent = demoStats.relevanceScore.toString();
+        scoreTrendEl.textContent = demoStats.relevanceTrendText;
+
+        // Gráfico de interacciones
+        const chartContainer = document.getElementById("chartInteracciones");
+        if (chartContainer) {
+            const maxValue = demoStats.interactionsByDay.reduce(
+                (max, item) => (item.value > max ? item.value : max),
+                1
+            );
+
+            demoStats.interactionsByDay.forEach((item) => {
+                const bar = document.createElement("div");
+                bar.className = "chart-bar";
+
+                const inner = document.createElement("div");
+                inner.className = "chart-bar-inner";
+                const height = Math.round((item.value / maxValue) * 100);
+                inner.style.height = height + "%";
+
+                const label = document.createElement("span");
+                label.className = "chart-bar-label";
+                label.textContent = item.label;
+
+                bar.appendChild(inner);
+                bar.appendChild(label);
+                chartContainer.appendChild(bar);
+            });
+        }
+
+        // Resumen rápido de estadísticas
+        const totalInteraccionesEl = document.getElementById("totalInteracciones");
+        const totalVentasEl = document.getElementById("totalVentas");
+        const ratioConversionEl = document.getElementById("ratioConversion");
+
+        const totalInteracciones = demoStats.totalInteractions;
+        const totalVentas = demoStats.totalSales;
+        const ratioConversion =
+            totalInteracciones > 0 ? (totalVentas / totalInteracciones) * 100 : 0;
+
+        totalInteraccionesEl.textContent = totalInteracciones.toLocaleString("es-ES");
+        totalVentasEl.textContent = totalVentas.toLocaleString("es-ES");
+        ratioConversionEl.textContent =
+            ratioConversion.toLocaleString("es-ES", { maximumFractionDigits: 2 }) + "%";
+
+        // Ingresos
+        const ingresosTablaBody = document.getElementById("ingresosTablaBody");
+        const ingresosTotalesEl = document.getElementById("ingresosTotales");
+        if (ingresosTablaBody && ingresosTotalesEl) {
+            ingresosTablaBody.innerHTML = "";
+            let totalNet = 0;
+            revenueData.forEach((row) => {
+                const tr = document.createElement("tr");
+                const tdMes = document.createElement("td");
+                const tdBruto = document.createElement("td");
+                const tdNeto = document.createElement("td");
+
+                tdMes.textContent = row.month;
+                tdBruto.textContent = row.gross.toLocaleString("es-ES", {
+                    style: "currency",
+                    currency: "EUR"
+                });
+                tdNeto.textContent = row.net.toLocaleString("es-ES", {
+                    style: "currency",
+                    currency: "EUR"
+                });
+
+                tr.appendChild(tdMes);
+                tr.appendChild(tdBruto);
+                tr.appendChild(tdNeto);
+                ingresosTablaBody.appendChild(tr);
+
+                totalNet += row.net;
+            });
+
+            ingresosTotalesEl.textContent = totalNet.toLocaleString("es-ES", {
+                style: "currency",
+                currency: "EUR"
+            });
+        }
+
+        // Gestión de productos (demo en memoria)
+        const productForm = document.getElementById("productForm");
+        const productsList = document.getElementById("productsList");
+        const products = [];
+
+        function renderProducts() {
+            if (!productsList) return;
+            productsList.innerHTML = "";
+
+            if (products.length === 0) {
+                const p = document.createElement("p");
+                p.className = "hint";
+                p.textContent =
+                    "Todavía no has añadido productos. Cuando guardes uno desde el formulario, aparecerá aquí.";
+                productsList.appendChild(p);
+                return;
+            }
+
+            products.forEach((p) => {
+                const card = document.createElement("article");
+                card.className = "card product-card";
+
+                const thumb = document.createElement("div");
+                thumb.className = "product-thumb";
+
+                if (p.image) {
+                    const img = document.createElement("img");
+                    img.src = p.image;
+                    img.alt = "Imagen de " + p.name;
+                    thumb.appendChild(img);
+                }
+
+                const info = document.createElement("div");
+                const title = document.createElement("div");
+                title.className = "product-title";
+                title.textContent = p.name;
+
+                const meta = document.createElement("div");
+                meta.className = "product-meta";
+                meta.textContent = "Categoría: " + p.category;
+
+                const price = document.createElement("div");
+                price.className = "product-price";
+                price.textContent = p.price.toLocaleString("es-ES", {
+                    style: "currency",
+                    currency: "EUR"
+                });
+
+                const desc = document.createElement("div");
+                desc.className = "product-meta";
+                desc.textContent = p.description || "Sin descripción.";
+
+                info.appendChild(title);
+                info.appendChild(meta);
+                info.appendChild(price);
+                info.appendChild(desc);
+
+                card.appendChild(thumb);
+                card.appendChild(info);
+                productsList.appendChild(card);
+            });
+        }
+
+        if (productForm) {
+            productForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+                if (!accountToggle.checked) {
+                    alert("Tu cuenta no está aprobada. No puedes añadir productos todavía.");
+                    return;
+                }
+
+                const formData = new FormData(productForm);
+                const name = formData.get("name").toString().trim();
+                const category = formData.get("category").toString();
+                const price = parseFloat(formData.get("price").toString());
+                const image = formData.get("image").toString().trim();
+                const description = formData.get("description").toString().trim();
+
+                if (!name || isNaN(price)) {
+                    alert("Por favor, rellena al menos el nombre y el precio.");
+                    return;
+                }
+
+                products.push({ name, category, price, image, description });
+                productForm.reset();
+                renderProducts();
+            });
+        }
+
+        renderProducts();
+
+        // Promoción mensual y plan de membresía
+        const btnTogglePromo = document.getElementById("btnTogglePromo");
+        const promoStatusText = document.getElementById("promoStatusText");
+        const planButton = document.getElementById("planButton");
+        const planInputs = document.querySelectorAll('input[name="membershipPlan"]');
+
+        let promoActive = false;
+        let membershipPlan = null;
+
+        function getSelectedPlanName() {
+            let selected = null;
+            planInputs.forEach((input) => {
+                if (input.checked) selected = input.value;
+            });
+            return selected;
+        }
+
+        function updatePlanUI() {
+            if (!planButton) return;
+            if (membershipPlan) {
+                planButton.textContent = membershipPlan;
+                planButton.classList.remove("btn-outline");
+                planButton.classList.add("btn-primary");
+            } else {
+                planButton.textContent = "Plan Premium";
+                planButton.classList.remove("btn-primary");
+                planButton.classList.add("btn-outline");
+            }
+        }
+
+        function updatePromoStatus() {
+            if (!promoStatusText) return;
+            if (promoActive && membershipPlan) {
+                promoStatusText.innerHTML =
+                    'Estado actual: <span>Activo</span>. Plan <strong>' +
+                    membershipPlan +
+                    "</strong> simulado, aumentando la visibilidad de tus productos en FlickIt.";
+                promoStatusText.classList.remove("promo-status-inactive");
+                promoStatusText.classList.add("promo-status-active");
+            } else {
+                promoStatusText.innerHTML =
+                    'Estado actual: <span>Inactivo</span>. Solo es una simulación de interfaz, no se realiza ningún cobro real.';
+                promoStatusText.classList.remove("promo-status-active");
+                promoStatusText.classList.add("promo-status-inactive");
+            }
+        }
+
+        if (btnTogglePromo && promoStatusText) {
+            btnTogglePromo.addEventListener("click", () => {
+                if (!promoActive) {
+                    const selected = getSelectedPlanName() || "Premium";
+                    membershipPlan = selected;
+                    promoActive = true;
+                    btnTogglePromo.textContent = "Desactivar servicio mensual";
+                } else {
+                    promoActive = false;
+                    membershipPlan = null;
+                    btnTogglePromo.textContent = "Activar servicio mensual";
+                }
+                updatePlanUI();
+                updatePromoStatus();
+            });
+        }
+
+        updatePlanUI();
+        updatePromoStatus();
+
+        // Modal Manual de usuario
+        const manualButton = document.getElementById("manualButton");
+        const manualModal = document.getElementById("manualModal");
+        const manualClose = document.getElementById("manualClose");
+        const manualBackdrop = document.getElementById("manualBackdrop");
+
+        function openManual() {
+            if (manualModal) manualModal.classList.add("open");
+        }
+
+        function closeManual() {
+            if (manualModal) manualModal.classList.remove("open");
+        }
+
+        if (manualButton) manualButton.addEventListener("click", openManual);
+        if (manualClose) manualClose.addEventListener("click", closeManual);
+        if (manualBackdrop) manualBackdrop.addEventListener("click", closeManual);
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                closeManual();
+            }
+        });
+
+        // User menu
+        const userMenuButton = document.getElementById("userMenuButton");
+        const userMenu = document.getElementById("userMenu");
+
+        if (userMenuButton && userMenu) {
+            userMenuButton.addEventListener("click", (e) => {
+                e.stopPropagation();
+                userMenu.classList.toggle("open");
+            });
+
+            document.addEventListener("click", (e) => {
+                if (!userMenu.contains(e.target) && e.target !== userMenuButton) {
+                    userMenu.classList.remove("open");
+                }
+            });
+        }
+
+        const themeItem = document.querySelector('[data-action="toggle-theme"]');
+        const settingsItem = document.querySelector('[data-action="user-settings"]');
+        const totalIncomeItem = document.querySelector('[data-action="total-income"]');
+        const logoutItem = document.querySelector('[data-action="logout"]');
+
+        let isDarkMode = true;
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle("light-mode", !isDarkMode);
+            if (themeItem) {
+                themeItem.textContent = isDarkMode
+                    ? "Cambiar tema (oscuro / claro)"
+                    : "Cambiar tema (oscuro / claro)";
+            }
+        }
+
+        if (themeItem) {
+            themeItem.addEventListener("click", () => {
+                toggleTheme();
+                if (userMenu) userMenu.classList.remove("open");
+            });
+        }
+
+        if (settingsItem) {
+            settingsItem.addEventListener("click", () => {
+                alert("Aquí irían los ajustes de usuario (nombre, email, contraseña, etc.).");
+                if (userMenu) userMenu.classList.remove("open");
+            });
+        }
+
+        if (totalIncomeItem) {
+            totalIncomeItem.addEventListener("click", () => {
+                goToView("ingresos");
+                if (userMenu) userMenu.classList.remove("open");
+            });
+        }
+
+        if (logoutItem) {
+            logoutItem.addEventListener("click", () => {
+                // Reset demo: cuenta pendiente, sin productos, sin plan
+                accountToggle.checked = false;
+                updateAccountStatus();
+                products.length = 0;
+                renderProducts();
+                promoActive = false;
+                membershipPlan = null;
+                btnTogglePromo.textContent = "Activar servicio mensual";
+                updatePlanUI();
+                updatePromoStatus();
+                goToView("panel");
+                if (userMenu) userMenu.classList.remove("open");
+                alert("Has cerrado sesión (simulado).");
+            });
+        }
+    });
+</script>
+</body>
+</html>
