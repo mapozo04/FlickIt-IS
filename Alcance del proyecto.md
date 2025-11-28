@@ -20,6 +20,7 @@ Las siguientes funcionalidades serán desarrolladas e incluidas en la aplicació
   * **Ajustes de la Aplicación:** Opciones de configuración de la aplicación (notificaciones, privacidad, idioma).  
 * **Gestión de Productos:** Un módulo para que los administradores puedan subir, editar y eliminar productos disponibles en la aplicación.  
 * **Registro e Inicio de Sesión de Usuarios:** Proceso estándar de autenticación de usuarios.
+* **Sistema de Recomendación Avanzado (Machine Learning):** Inicialmente, los productos se mostrarán por orden de subida o popularidad simple. No se desarrollarán algoritmos complejos de aprendizaje automático para la personalización de las recomendaciones. 
 
 # 
 
@@ -27,7 +28,6 @@ Las siguientes funcionalidades serán desarrolladas e incluidas en la aplicació
 
 Las siguientes funcionalidades y aspectos NO forman parte del alcance de este proyecto y NO serán desarrolladas:
 
-* ** Sistema de Recomendación Avanzado (Machine Learning):** Inicialmente, los productos se mostrarán por orden de subida o popularidad simple. No se desarrollarán algoritmos complejos de aprendizaje automático para la personalización de las recomendaciones.  
 * **Integración Social Completa:** No se incluirán funcionalidades como compartir productos en redes sociales ni chats entre usuarios.  
 * **Funcionalidad de Vendedor/Marketplace (P2P):** El sistema se centrará en la venta de productos por parte de la plataforma o de vendedores preaprobados. No se incluirán herramientas para que cualquier usuario pueda subir sus propios productos para venderlos (Punto a Punto).  
 * **Sistemas de Fidelización (Puntos, Cupones):** No se incluirán programas de lealtad, gestión de cupones complejos, o sistemas de puntos de recompensa en esta fase inicial.  
