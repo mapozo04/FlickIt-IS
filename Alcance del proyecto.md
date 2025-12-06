@@ -55,7 +55,6 @@ El proyecto se considerará completo y aceptado cuando se cumplan todos los sigu
 * **Criterio 2: Productos en Compras:** Los productos marcados con "Me gusta" (deslizamiento a la derecha) aparecen instantáneamente en la sección de Compras.  
 * **Criterio 3: Flujo de Compra Básico:** El usuario puede seleccionar un producto guardado y se le redirige correctamente a la página de pago/checkout simulada.  
 * **Criterio 4: Perfil y Ajustes Completos:** Todas las opciones dentro del apartado de Perfil (edición de datos, datos bancarios, ajustes) son accesibles y permiten la modificación y guardado de la información.  
-* **Criterio 5: Estabilidad del Sistema:** La aplicación no presenta errores graves (crashes) y mantiene un rendimiento aceptable en dispositivos de prueba clave (como fecha de finalización de pruebas).  
-* **Criterio 6: Aprobación del Administrador de Productos:** El panel de gestión permite a la persona la carga, edición y visualización de al menos 100 productos de prueba.
+* **Criterio 5: Aprobación del Administrador de Productos:** El panel de gestión permite a la persona la carga, edición y visualización de productos.
 
 Pablo Díaz Ruipérez, Arturo González Carbajo y José Massot Gregorio
