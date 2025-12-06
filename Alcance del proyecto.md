@@ -6,7 +6,8 @@ Este documento define el alcance para el desarrollo de una aplicación móvil co
 
 Las siguientes funcionalidades serán desarrolladas e incluidas en la aplicación:
 
-* **Funcionalidad de Deslizamiento de Productos:**  
+* **Funcionalidad de Deslizamiento de Productos.**
+* **Registro e Inicio de Sesión de Usuarios:** Proceso estándar de autenticación de usuarios.  
   * Permitir al usuario visualizar productos individualmente en una interfaz de pantalla completa.  
   * **Deslizamiento a la derecha:** El producto se marca como "Me gusta" y se guarda en la sección de Compras.  
   * **Deslizamiento a la izquierda:** El producto se descarta (No me gusta).  
@@ -16,10 +17,8 @@ Las siguientes funcionalidades serán desarrolladas e incluidas en la aplicació
   * Funcionalidad para ver los detalles del producto y proceder a la compra (integración básica con una pasarela de pago).  
 * **Apartado de Perfil de Usuario:**  
   * **Datos de Usuario:** Visualización y edición de información personal (nombre, email, etc.).  
-  * **Datos Bancarios:** Gestión de los métodos de pago para futuras compras.  
   * **Ajustes de la Aplicación:** Opciones de configuración de la aplicación (notificaciones, privacidad, idioma).  
-* **Gestión de Productos:** Un módulo para que los administradores puedan subir, editar y eliminar productos disponibles en la aplicación.  
-* **Registro e Inicio de Sesión de Usuarios:** Proceso estándar de autenticación de usuarios.
+* **Apartado de notificación:** Un módulo que incluye el estado de envío y del producto.  
 * **Sistema de Recomendación Avanzado (Machine Learning):** Inicialmente, los productos se mostrarán por orden de subida o popularidad simple. No se desarrollarán algoritmos complejos de aprendizaje automático para la personalización de las recomendaciones. 
 
 # 
@@ -42,11 +41,9 @@ Los siguientes son los principales productos que se entregarán al finalizar el 
 | Entregable | Descripción | Responsable |
 | :---- | :---- | :---- |
 | Aplicación Móvil (Beta) | Versión funcional de la aplicación en iOS y/o Android, incluyendo las funcionalidades de deslizamiento, compras y perfil. | Equipo de Desarrollo |
-| Sistema de Gestión | Panel de administración web para la gestión de productos y usuarios. | Equipo de Gestión |
+| Manual de Usuario | Panel de administración web para la gestión de productos y usuarios. | Equipo de Gestión |
 | Documentación Técnica | Manuales de arquitectura, código fuente y despliegue del sistema. | Líder Técnico |
-| Plan de Pruebas y Resultados | Que detalla las pruebas realizadas y los resultados obtenidos. | Equipo QA |
 
-# 
 
 # 
 
