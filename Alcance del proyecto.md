@@ -19,7 +19,8 @@ Las siguientes funcionalidades serán desarrolladas e incluidas en la aplicació
   * **Datos de Usuario:** Visualización y edición de información personal (nombre, email, etc.).  
   * **Ajustes de la Aplicación:** Opciones de configuración de la aplicación (notificaciones, privacidad, idioma).  
 * **Apartado de notificación:** Un módulo que incluye el estado de envío y del producto.  
-* **Sistema de Recomendación Avanzado (Machine Learning):** Inicialmente, los productos se mostrarán por orden de subida o popularidad simple. No se desarrollarán algoritmos complejos de aprendizaje automático para la personalización de las recomendaciones. 
+* **Sistema de Recomendación Avanzado (Machine Learning):** Inicialmente, los productos se mostrarán por orden de subida o popularidad simple. No se desarrollarán algoritmos complejos de aprendizaje automático para la personalización de las recomendaciones.
+* **Soporte Multi-idioma:** El desarrollo inicial será en un solo idioma con posibilidad de una breve traducción al inglés.
 
 # 
 
@@ -30,7 +31,7 @@ Las siguientes funcionalidades y aspectos NO forman parte del alcance de este pr
 * **Integración Social Completa:** No se incluirán funcionalidades como compartir productos en redes sociales ni chats entre usuarios.  
 * **Funcionalidad de Vendedor/Marketplace (P2P):** El sistema se centrará en la venta de productos por parte de la plataforma o de vendedores preaprobados. No se incluirán herramientas para que cualquier usuario pueda subir sus propios productos para venderlos (Punto a Punto).  
 * **Sistemas de Fidelización (Puntos, Cupones):** No se incluirán programas de lealtad, gestión de cupones complejos, o sistemas de puntos de recompensa en esta fase inicial.  
-* **Soporte Multi-idioma:** El desarrollo inicial será en un solo idioma.
+
 
 # 
 
