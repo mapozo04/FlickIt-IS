@@ -32,7 +32,7 @@ Scripts de sql adjuntos (Tablas, ejemplos de triggers).
 Casos de uso necesarios sobre la BBDD.  
 Modelo R y de ser posible E/R.
 
-![bbbdd-imagen](tablas-imagen.png)
+![bbbdd-imagen](FlickIt_BBDD_ModeloR.png)
 
 ## **4.4 Criterios de aceptación**
 
