@@ -32,6 +32,8 @@ Scripts de sql adjuntos (Tablas, ejemplos de triggers).
 Casos de uso necesarios sobre la BBDD.  
 Modelo R y de ser posible E/R.
 
+![bbbdd-imagen](tablas-imagen.png)
+
 ## **4.4 Criterios de aceptación**
 
 El proyecto será aceptado si la BBDD cumple los siguientes requisitos de diseño, que están respaldados por las restricciones SQL:
