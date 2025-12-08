@@ -24,7 +24,7 @@ Derivado de los límites del sistema y las especificaciones técnicas:
 * **Usabilidad:** La interfaz debe centrarse en la navegación por deslizamiento similar a aplicaciones tipo Tinder, priorizando la facilidad de uso en pantalla completa.  
 * **Disponibilidad y Plataforma:** La aplicación debe ser funcional en sistemas operativos móviles como son iOS o Android.  
 * **Idioma:** La interfaz y los contenidos del sistema deben estar desarrollados en un solo idioma inicialmente con posibilidad de una breve traducción al inglés.
-* **Lógica de Presentación:** El algoritmo de visualización debe regirse por orden de subida o popularidad simple, sin utilizar modelos complejos de Machine Learning en esta fase.  
+* **Lógica de Presentación:** El algoritmo de visualización debe regirse por modelos complejos de Machine Learning en esta fase.
 * **Restricciones de Integración:** El sistema no debe permitir la interacción social (chats/compartir) ni la carga de productos por usuarios no aprobados.
 
 # **5\.3 Requerimientos de Usuario**
@@ -39,3 +39,4 @@ Inferido de los criterios de aceptación y los entregables:
 * **Usuario Administrador (Vendedor):**  
   * Necesita una herramienta centralizada (Panel Web) para gestionar el catálogo de productos sin depender del equipo técnico para cada subida de stock.
 
+Pablo Díaz Ruipérez, Gabriel Vico Mata.
