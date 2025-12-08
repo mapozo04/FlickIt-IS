@@ -2,8 +2,7 @@
 
 A continuación, se detallan los requerimientos necesarios para el desarrollo de FlickIt
 
-### **5.1 Requerimientos Funcionales**
-
+# **5\.1 Requerimientos Funcionales**
 Basado en las funcionalidades y criterios de aceptación definidos en el alcance:
 
 * **Autenticación:** El sistema debe permitir el registro e inicio de sesión de usuarios mediante un proceso estándar.  
@@ -19,7 +18,7 @@ Basado en las funcionalidades y criterios de aceptación definidos en el alcance
 * **Notificaciones:** El sistema debe contar con un módulo para notificar al usuario sobre el estado de envío y del producto.  
 * **Gestión Administrativa:** El sistema debe contar con un panel de administración web que permita la carga, edición y visualización de productos por parte de los gestores.
 
-### **5.2 Requerimientos No Funcionales**
+# **5\.2 Requerimientos No Funcionales**
 
 Derivado de los límites del sistema y las especificaciones técnicas:
 
@@ -29,7 +28,7 @@ Derivado de los límites del sistema y las especificaciones técnicas:
 * **Lógica de Presentación:** El algoritmo de visualización debe regirse por orden de subida o popularidad simple, sin utilizar modelos complejos de Machine Learning en esta fase.  
 * **Restricciones de Integración:** El sistema no debe permitir la interacción social (chats/compartir) ni la carga de productos por usuarios finales (no P2P).
 
-### **5.3 Requerimientos de Usuario**
+# **5\.3 Requerimientos de Usuario**
 
 Inferido de los criterios de aceptación y los entregables:
 
