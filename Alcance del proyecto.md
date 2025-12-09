@@ -30,7 +30,6 @@ Las siguientes funcionalidades y aspectos NO forman parte del alcance de este pr
 * **Integración Social Completa:** No se incluirán funcionalidades como compartir productos en redes sociales ni chats entre usuarios.  
 * **Funcionalidad de Vendedor/Marketplace:** El sistema se centrará en la venta de productos por parte de la plataforma o de vendedores preaprobados. No se incluirán herramientas para que cualquier usuario pueda subir sus propios productos para venderlos.  
 * **Sistemas de Fidelización (Puntos, Cupones):** No se incluirán programas de lealtad, gestión de cupones complejos, o sistemas de puntos de recompensa en esta fase inicial.
-* 
 # 
 
 # 4.3 Entregables Principales
